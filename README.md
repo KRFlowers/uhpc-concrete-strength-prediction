@@ -10,11 +10,12 @@ This project analyzes 810 UHPC mix designs to understand the relationship betwee
 
 ```
 ├── data/
-│   └── uhpc_dataset.csv
+│   ├── uhpc_dataset.csv           # Raw data (810 records)
+│   └── uhpc_dataset_cleaned.csv   # Cleaned data (792 records)
 ├── notebooks/
 │   ├── 01_exploratory_analysis.ipynb
 │   └── 02_model_development.ipynb
-├── images/
+├── images/                        # Visualizations from analysis
 └── README.md
 ```
 
@@ -26,7 +27,7 @@ This project analyzes 810 UHPC mix designs to understand the relationship betwee
 ## Dataset
 
 - **Source:** Kashem, A., et al. (2023). Ultra-High-Performance Concrete (UHPC). Mendeley Data.
-- **Records:** 810 UHPC mix designs
+- **Records:** 810 UHPC mix designs (792 after removing duplicates)
 - **Features:** 13 variables (cement, slag, silica_fume, limestone_powder, quartz_powder, fly_ash, nano_silica, aggregate, water, fiber, superplasticizer, temperature, age)
 - **Target:** compressive_strength (MPa)
 
