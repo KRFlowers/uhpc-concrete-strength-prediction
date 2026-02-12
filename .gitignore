@@ -23,3 +23,9 @@ Thumbs.db
 
 # Environment
 .env
+
+# Claude Code
+.claude/
+
+# Working documents
+docs/

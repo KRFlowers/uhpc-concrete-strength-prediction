@@ -1,0 +1,62 @@
+{
+  "datasets": [
+    {
+      "filename": "uhpc_dataset.csv",
+      "original_filename": "Data UHPC.xlsx",
+      "title": "Ultra-High-Performance Concrete (UHPC)",
+      "source": "Mendeley Data",
+      "url": "https://data.mendeley.com/datasets/85r7bh4zsz/1",
+      "doi": "10.17632/85r7bh4zsz.1",
+      "authors": [
+        "Kashem, Abul",
+        "Karim, Rezaul",
+        "Malo, Somir Chandra",
+        "Das, Pobithra"
+      ],
+      "institution": "Shahjalal University of Science and Technology",
+      "license": "CC BY 4.0",
+      "published_date": "2023-12-18",
+      "downloaded_date": "2025-12-31",
+      "samples": 810,
+      "features": 14,
+      "target_variable": "CS",
+      "description": "Experimental dataset for Ultra-High-Performance Concrete (UHPC) with 810 samples of mixture proportions. Compiled from published experimental research. Includes 13 input features covering cement composition, supplementary cementitious materials, curing conditions, and fiber content. Target variable is compressive strength in MPa.",
+      "citation": "Kashem, Abul; Karim, Rezaul; Malo, Somir Chandra; Das, Pobithra (2023), Ultra-High-Performance Concrete (UHPC), Mendeley Data, V1, doi: 10.17632/85r7bh4zsz.1",
+      "variables": {
+        "C": "Cement",
+        "W": "Water",
+        "FA": "Fly Ash",
+        "SF": "Silica Fume",
+        "NS": "Nano-Silica",
+        "QP": "Quartz Powder",
+        "LP": "Limestone Powder",
+        "A": "Aggregate",
+        "S": "Slag",
+        "SP": "Superplasticizer",
+        "Fi": "Fiber",
+        "T": "Temperature",
+        "Age": "Curing Age",
+        "CS": "Compressive Strength"
+      },
+      "column_mapping": {
+        "C": "cement",
+        "W": "water",
+        "FA": "fly_ash",
+        "SF": "silica_fume",
+        "NS": "nano_silica",
+        "QP": "quartz_powder",
+        "LP": "limestone_powder",
+        "A": "aggregate",
+        "S": "slag",
+        "SP": "superplasticizer",
+        "Fi": "fiber",
+        "T": "temperature",
+        "Age": "age",
+        "CS": "compressive_strength"
+      }
+    }
+  ],
+  "metadata_version": "1.0",
+  "created_date": "2025-12-31",
+  "created_by": "Kristi Flowers"
+}

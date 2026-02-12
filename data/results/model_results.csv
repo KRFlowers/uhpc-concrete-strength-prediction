@@ -1,0 +1,8 @@
+Model,RMSE_Mean,RMSE_Std,MAE_Mean,MAE_Std,R2_Mean,R2_Std
+Linear Regression,22.76,1.29,17.98,0.96,0.6684,0.0511
+Ridge,22.76,1.26,17.99,0.94,0.6684,0.0509
+LASSO,23.5,0.88,18.92,0.63,0.6471,0.0466
+Random Forest,9.3,0.85,6.78,0.52,0.9437,0.014
+XGBoost (tuned),7.98,,,,,
+Random Forest (tuned),9.25,,,,,
+XGBoost (test),5.93,,4.25,,0.9779,
