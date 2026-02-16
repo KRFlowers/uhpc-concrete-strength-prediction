@@ -1,6 +1,6 @@
 # UHPC Compressive Strength Prediction
 
-This project analyzes a dataset of 810 Ultra-High-Performance Concrete (UHPC) mix designs to build and compare machine learning models that predict compressive strength. Models were evaluated using cross-validation to identify the strongest performer. In addition to predictive performance, I applied interpretable machine learning techniques to better understand how individual mix components influence strength. The project emphasizes both accurate prediction and model interpretability, recognizing that in materials design, understanding how variables influence strength is as important as the prediction itself.
+This project builds and compares five regression models (Linear Regression, Ridge, LASSO, Random Forest, and XGBoost) to predict UHPC compressive strength from 13 mix design features. Models were evaluated using 5-fold cross-validation with RMSE as the primary metric, followed by hyperparameter tuning via GridSearchCV. The final XGBoost model achieved an RMSE of 5.93 MPa (R² = 0.978) on a held-out test set. SHAP analysis was applied to interpret feature contributions at both global and individual prediction levels.
 
 ---
 
@@ -35,6 +35,8 @@ Model performance was evaluated using RMSE and R² on a held-out test set.
 - Tree-based models substantially outperformed linear models (RMSE ~8–9 MPa vs ~23 MPa)
 - Random Forest performed strongly but slightly below XGBoost
 
+![Cross-Validation Model Comparison](images/cv_model_comparison.png)
+
 ### Feature Importance
 
 Top predictors identified via SHAP:
@@ -46,28 +48,27 @@ Top predictors identified via SHAP:
 
 ### SHAP Insights
 
+![SHAP Beeswarm Plot](images/shap_summary_beeswarm.png)
+
 - Age had the strongest influence on predicted strength. Higher curing time consistently increased predictions, while low curing time significantly reduced them.
 - Fiber, cement, silica fume, and superplasticizer were generally associated with higher predicted strength.
 - Higher water and aggregate content were associated with lower predicted strength.
-- The variation in SHAP values across samples indicates that the magnitude of a feature’s contribution differs across observations.
+- The variation in SHAP values across samples indicates that the magnitude of a feature's contribution differs across observations.
 
 ---
 
 ## Limitations
 
 - Moderate dataset size (792 records after cleaning)
-- Limited materials science domain expertise
-- Feature engineering was limited and could be expanded with additional domain research
-- Interpretation focused on high-level variable influence rather than detailed engineering implications
+- Feature engineering and interpretation could be expanded with additional domain expertise in materials science
 
 ---
 
 ## Next Steps
 
-- Incorporate domain-informed feature engineering (e.g., ratio-based or interaction features)
-- Add prediction intervals for uncertainty estimation
+- Incorporate domain-informed feature engineering (ratio-based or interaction features)
+- Evaluate alternative prediction interval methods to improve coverage
 - Validate performance on external UHPC datasets
-- Explore how the model could support performance-based mix design decisions
 - Develop an interactive tool for rapid mix experimentation
 
 ---
@@ -83,7 +84,7 @@ Top predictors identified via SHAP:
 
 ## Tech Stack
 
-- Python 3.12+
+- Python 3.14
 - pandas, NumPy
 - scikit-learn
 - XGBoost
