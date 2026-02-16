@@ -27,5 +27,8 @@ Thumbs.db
 # Claude Code
 .claude/
 
-# Working documents
-docs/
+# Private working notes (review worksheets, grading rubrics, session notes)
+notes/
+
+# Word documents (keep locally as editable source, commit PDFs only)
+*.docx

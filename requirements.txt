@@ -1,0 +1,29 @@
+# UHPC Compressive Strength Prediction
+# Python 3.14.2
+#
+# Install: pip install -r requirements.txt
+
+# Data manipulation
+pandas>=2.3,<3.0
+numpy>=2.3,<3.0
+
+# Visualization
+matplotlib>=3.10,<4.0
+seaborn>=0.13,<1.0
+
+# Statistical analysis
+scipy>=1.16,<2.0
+statsmodels>=0.14,<1.0
+
+# Machine learning
+scikit-learn>=1.8,<2.0
+xgboost>=3.1,<4.0
+
+# Model interpretation
+shap>=0.50,<1.0
+
+# Serialization
+joblib>=1.5,<2.0
+
+# Notebook environment
+jupyter>=1.0
