@@ -25,5 +25,8 @@ shap>=0.50,<1.0
 # Serialization
 joblib>=1.5,<2.0
 
+# Web app
+streamlit>=1.45,<2.0
+
 # Notebook environment
 jupyter>=1.0

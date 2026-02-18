@@ -20,8 +20,10 @@ The project is organized as a notebook-based pipeline.
 - **02_model_development.ipynb**  
   Compared Linear Regression, Ridge, LASSO, Random Forest, and XGBoost using cross-validation. Selected the best-performing model and evaluated it on a held-out test set.
 
-- **03_model_interpretation.ipynb**  
+- **03_model_interpretation.ipynb**
   Applied SHAP to the final XGBoost model to assess global feature importance and examine how key variables influence predicted compressive strength.
+
+- **Streamlit App** — Interactive tool for prediction and exploration (see [below](#streamlit-app))
 
 ---
 
@@ -57,19 +59,41 @@ Top predictors identified via SHAP:
 
 ---
 
+## Streamlit App
+
+The project includes an interactive two-page Streamlit app built on the trained XGBoost model.
+
+![Strength Predictor](images/app_strength_predictor.png)
+
+- **Strength Predictor** — Adjust mix design sliders to get a predicted compressive strength with per-feature SHAP explanation
+- **Observation Explorer** — Browse all 792 observations, filter by strength range or material presence, and select any row to see the model's prediction and feature-level impact
+
+Run locally:
+
+    streamlit run app/app.py
+
+---
+
 ## Limitations
 
-- Moderate dataset size (792 records after cleaning)
-- Feature engineering and interpretation could be expanded with additional domain expertise in materials science
+- Moderate dataset size (792 records after cleaning) with no external validation dataset
+- Bootstrap prediction intervals achieved 81.8% coverage vs. the 95% nominal target, suggesting the need for an alternative uncertainty method
+- Analysis used raw mix design features only; feature engineering was not explored
 
 ---
 
 ## Next Steps
 
-- Incorporate domain-informed feature engineering (ratio-based or interaction features)
-- Evaluate alternative prediction interval methods to improve coverage
-- Validate performance on external UHPC datasets
-- Develop an interactive tool for rapid mix experimentation
+A detailed analysis report was created that identified the possible enhancements below. These were captured in an enhancement roadmap located in [`docs/`](docs/).
+
+- Engineer domain-informed features such as water-to-cement and water-to-binder ratios
+- Replace bootstrap intervals with conformal prediction for more accurate uncertainty bounds
+- Add Spearman correlations and segmented residual analysis to strengthen diagnostic coverage
+- Explore use of variable correlation thresholds to better identify feature relationships
+- Implement repeated k-fold cross-validation
+- Compare feature importance methods (SHAP vs. permutation vs. gain-based) and add SHAP dependence plots
+- Evaluate additional models (Elastic Net, MLP, SVR) and Bayesian hyperparameter tuning via Optuna
+- Compare model performance against published ML concrete strength studies to benchmark results in the broader literature
 
 ---
 
@@ -91,4 +115,5 @@ Top predictors identified via SHAP:
 - SHAP
 - statsmodels
 - matplotlib, seaborn
+- Streamlit
 - Jupyter
