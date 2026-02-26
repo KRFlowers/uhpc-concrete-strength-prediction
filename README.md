@@ -2,26 +2,21 @@
 
 ## Overview
 
-Ultra-High-Performance Concrete (UHPC) is About a promising technology with significant structural advantages. However, determining optimal mix proportions requires costly and time-consuming physical testing. This project leverages machine learning to predict compressive strength, offering a more efficient approach to mix design and potential to accelerate development.
+Ultra-High-Performance Concrete (UHPC) is a promising technology with significant structural advantages. However, determining optimal mix proportions can require costly and time-consuming physical testing. To address this issue, this project explores using machine learning to predict compressive strength, with the goal of offering a more efficient approach to mix design and potential to accelerate development.
 
-Five regression models, including Linear Regression, Ridge, LASSO, Random Forest, and XGBoost, were evaluated for predicting compressive strength. Performance was assessed using RMSE, cross-validation, and hyperparameter tuning with GridSearchCV. XGBoost provided the best results with an RMSE of 5.93 MPa (R² = 0.978). SHAP analysis was applied to interpret feature contributions, offering valuable insights into both global and individual predictions.
+To explore this, five regression models, including Linear Regression, Ridge, LASSO, Random Forest, and XGBoost, were evaluated for predicting compressive strength. Performance was assessed using RMSE, cross-validation, and hyperparameter tuning with GridSearchCV. XGBoost provided the best results with an RMSE of 5.93 MPa (R² = 0.978). To interpret the model's predictions, SHAP analysis was applied to assess feature contributions at both the global and individual level.
 
 ---
 
 ## Approach
 
-The project is organized as a notebook-based pipeline.
+The analysis follows a three-stage notebook pipeline outlined below.
 
-- **01_exploratory_analysis.ipynb**  
-  Validated data quality, removed duplicate records (810 → 792), examined feature distributions, assessed correlations, and evaluated multicollinearity using VIF.
+1. **Exploratory Analysis** — Validate data quality, examine feature distributions, review correlations and assess multicollinearity
+2. **Model Development** — Evaluate five regression models using cross-validation, select and tune the best performer
+3. **Model Interpretation** — Apply SHAP to understand global feature impact and explain individual predictions
 
-- **02_model_development.ipynb**  
-  Compared Linear Regression, Ridge, LASSO, Random Forest, and XGBoost using cross-validation. Selected the best-performing model and evaluated it on a held-out test set.
-
-- **03_model_interpretation.ipynb**
-  Applied SHAP to the final XGBoost model to assess global feature importance and examine how key variables influence predicted compressive strength.
-
-- **Streamlit App** — Interactive tool for prediction and exploration (see [below](#streamlit-app))
+The project also includes an interactive Streamlit app based on SHAP analysis, where users can adjust mix components and explore how each change influences predicted strength (see [below](#streamlit-app)).
 
 ---
 
@@ -50,16 +45,15 @@ Top predictors identified via SHAP:
 
 ![SHAP Beeswarm Plot](images/shap_summary_beeswarm.png)
 
-- Age had the strongest influence on predicted strength. Higher curing time consistently increased predictions, while low curing time significantly reduced them.
-- Fiber, cement, silica fume, and superplasticizer were generally associated with higher predicted strength.
-- Higher water and aggregate content were associated with lower predicted strength.
-- The variation in SHAP values across samples indicates that the magnitude of a feature's contribution differs across observations.
+- Age had the strongest influence on predicted strength
+- Higher curing time consistently increased predictions
+- Low curing time significantly reduced predictions
+- Fiber, cement, silica fume, and superplasticizer were generally associated with higher predicted strength
+- Higher water and aggregate content were associated with lower predicted strength
 
 ---
 
 ## Streamlit App
-
-The project includes an interactive two-page Streamlit app built on the trained XGBoost model.
 
 ![Strength Predictor](images/app_strength_predictor.png)
 
@@ -85,13 +79,13 @@ Run locally:
 A detailed analysis report was created that identified the possible enhancements below. These were captured in an enhancement roadmap located in [`docs/`](docs/).
 
 - Engineer domain-informed features such as water-to-cement and water-to-binder ratios
-- Replace bootstrap intervals with conformal prediction for more accurate uncertainty bounds
+- Explore conformal prediction for more accurate uncertainty bounds
 - Add Spearman correlations and segmented residual analysis to strengthen diagnostic coverage
-- Explore use of variable correlation thresholds to better identify feature relationships
+- Explore use of alternate correlation thresholds to better identify feature relationships
 - Implement repeated k-fold cross-validation
 - Compare feature importance methods (SHAP vs. permutation vs. gain-based) and add SHAP dependence plots
 - Evaluate additional models (Elastic Net, MLP, SVR) and Bayesian hyperparameter tuning via Optuna
-- Compare model performance against published ML concrete strength studies to benchmark results in the broader literature
+- Compare model performance against published ML concrete strength studies to benchmark results 
 
 ---
 
@@ -115,3 +109,12 @@ A detailed analysis report was created that identified the possible enhancements
 - matplotlib, seaborn
 - Streamlit
 - Jupyter
+
+---
+
+## References
+
+- Kashem, A., et al. (2023). Ultra-High-Performance Concrete (UHPC). Mendeley Data. https://data.mendeley.com/datasets/85r7bh4zsz/1
+
+**K Flowers**
+GitHub: [KRFlowers](https://github.com/KRFlowers)
