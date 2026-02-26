@@ -1,12 +1,10 @@
 # UHPC Compressive Strength Prediction
 
-This project builds and compares five regression models (Linear Regression, Ridge, LASSO, Random Forest, and XGBoost) to predict UHPC compressive strength from 13 mix design features. Models were evaluated using 5-fold cross-validation with RMSE as the primary metric, followed by hyperparameter tuning via GridSearchCV. The final XGBoost model achieved an RMSE of 5.93 MPa (R² = 0.978) on a held-out test set. SHAP analysis was applied to interpret feature contributions at both global and individual prediction levels.
+## Overview
 
----
+Ultra-High-Performance Concrete (UHPC) is About a promising technology with significant structural advantages. However, determining optimal mix proportions requires costly and time-consuming physical testing. This project leverages machine learning to predict compressive strength, offering a more efficient approach to mix design and potential to accelerate development.
 
-## Business Context
-
-Ultra-High-Performance Concrete (UHPC) is used in high-strength structural applications such as bridge components and hurricane-resistant construction. Predicting compressive strength from mix design variables can reduce costly laboratory testing cycles and support decision-making before physical batching. This project explores how a data-driven model can estimate strength while also providing insight into which mix components most meaningfully impact results.
+Five regression models, including Linear Regression, Ridge, LASSO, Random Forest, and XGBoost, were evaluated for predicting compressive strength. Performance was assessed using RMSE, cross-validation, and hyperparameter tuning with GridSearchCV. XGBoost provided the best results with an RMSE of 5.93 MPa (R² = 0.978). SHAP analysis was applied to interpret feature contributions, offering valuable insights into both global and individual predictions.
 
 ---
 
