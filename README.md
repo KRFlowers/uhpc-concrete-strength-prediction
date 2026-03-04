@@ -113,6 +113,31 @@ A detailed analysis report was created that identified the possible enhancements
 
 ---
 
+## Repository Structure
+
+```
+├── data/
+│   ├── raw/                 # Original UHPC dataset
+│   ├── processed/           # Cleaned dataset used for modeling
+│   └── results/             # Model artifacts, train/test splits, predictions
+├── notebooks/               # EDA, modeling, SHAP analysis
+├── app/                     # Streamlit SHAP application
+├── docs/                    # Enhancement roadmap and extended analysis
+├── images/                  # README figures
+└── requirements.txt         # Pinned dependencies
+```
+
+## Reproducibility & Validation
+
+- Python 3.x environment with pinned dependencies (see `requirements.txt`)
+- Fixed random seeds used for cross-validation and model training
+- Train/test split performed prior to preprocessing to prevent leakage
+- 5-fold cross-validation used for model comparison
+- Hyperparameter tuning conducted via cross-validated search
+- No manual data manipulation outside code
+- Notebook executes fully from top to bottom
+- SHAP interpretation generated from saved trained model artifacts
+
 ## References
 
 - Kashem, A., et al. (2023). Ultra-High-Performance Concrete (UHPC). Mendeley Data. https://data.mendeley.com/datasets/85r7bh4zsz/1
