@@ -2,11 +2,12 @@
 
 ## Project Overview
 
-Ultra-High-Performance Concrete (UHPC) offers significant structural advantages, yet determining optimal mix proportions typically requires **costly and time-consuming physical testing**. This project addresses this challenge by leveraging machine learning to predict compressive strength, providing a high-efficiency alternative to traditional mix design.
+Ultra-High-Performance Concrete (UHPC) is an emerging technology designed for high-strength structural applications. Developing optimal mix proportions typically requires extensive laboratory testing. This project explores whether machine learning can complement laboratory testing by predicting compressive strength from mix design inputs.
 
-To identify the most accurate solution, I evaluated five regression models, including Linear Regression, Random Forest, and XGBoost. After rigorous cross-validation and hyperparameter tuning, **XGBoost emerged as the superior model**, achieving an **RMSE of 5.93 MPa** ($R^2 = 0.978$).
+Five regression models were evaluated, including Linear Regression, Random Forest, and XGBoost. After cross-validation and hyperparameter tuning, XGBoost proved to be the strongest performer, achieving an RMSE of 5.93 MPa (R² = 0.978).
 
-In addition, the project provides the added benefit of model interpretability through **SHAP analysis**. This allows for a granular assessment of how individual materials contributed to model predictions, transforming the algorithm into a **reliable decision-support tool** for practical engineering applications.
+SHAP analysis was also used to interpret model predictions, showing how individual materials influence predicted strength. This adds practical value by making the model's reasoning transparent to anyone evaluating mix designs.
+
 ---
 
 ## Approach
@@ -77,8 +78,6 @@ Run locally:
 
 ## Next Steps
 
-A detailed analysis report was created that identified the possible enhancements below. These were captured in an enhancement roadmap located in [`docs/`](docs/).
-
 - Engineer domain-informed features such as water-to-cement and water-to-binder ratios
 - Explore conformal prediction for more accurate uncertainty bounds
 - Add Spearman correlations and segmented residual analysis to strengthen diagnostic coverage
@@ -87,6 +86,8 @@ A detailed analysis report was created that identified the possible enhancements
 - Compare feature importance methods (SHAP vs. permutation vs. gain-based) and add SHAP dependence plots
 - Evaluate additional models (Elastic Net, MLP, SVR) and Bayesian hyperparameter tuning via Optuna
 - Compare model performance against published ML concrete strength studies to benchmark results 
+
+These enhancements were identified through an AI-assisted review of the analysis. The full write-up and roadmap are in [`docs/`](docs/).
 
 ---
 
