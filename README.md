@@ -87,7 +87,7 @@ Run locally:
 - Evaluate additional models (Elastic Net, MLP, SVR) and Bayesian hyperparameter tuning via Optuna
 - Compare model performance against published ML concrete strength studies to benchmark results 
 
-These enhancements were identified through an AI-assisted review of the analysis. The full write-up and roadmap are in [`docs/`](docs/).
+These enhancements were originally identified through an AI-assisted review of the analysis. The full initial report and roadmap are in [`docs/`](docs/).
 
 ---
 
@@ -143,5 +143,5 @@ These enhancements were identified through an AI-assisted review of the analysis
 
 - Kashem, A., et al. (2023). Ultra-High-Performance Concrete (UHPC). Mendeley Data. https://data.mendeley.com/datasets/85r7bh4zsz/1
 
-**K Flowers**
+**Kristi Flowers**
 GitHub: [KRFlowers](https://github.com/KRFlowers)
