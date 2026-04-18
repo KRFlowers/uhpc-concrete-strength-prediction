@@ -5,12 +5,7 @@ Lets users define a UHPC mix design via sidebar sliders and predicts
 compressive strength using the trained XGBoost model. SHAP values
 explain which features drive the prediction.
 """
-
-# --- Imports ---
-# WHAT: Load external libraries and shared app utilities
-# WHY: streamlit builds the web interface, pandas handles data,
-#      shap explains predictions. Shared imports (from shared.py)
-#      provide constants and helpers used across both pages.
+# Load external libraries and shared app utilities
 
 import streamlit as st
 import pandas as pd
@@ -26,9 +21,6 @@ from shared import (
 
 
 # --- Load model ---
-# WHAT: Load the saved model from disk
-# WHY: If the model file is missing, st.stop() halts the app with a clear
-#      error message instead of crashing with an unreadable traceback
 
 try:
     model, feature_names = load_model()
@@ -40,22 +32,31 @@ except FileNotFoundError:
 
 
 # --- Header ---
-# WHAT: Display the page title and introductory description
-# WHY: Orients the user — tells them what this page does and where to start
 
-st.title("UHPC Compressive Strength Predictor")
+st.header("UHPC Compressive Strength Predictor")
 st.markdown(
-    "Predictions powered by the XGBoost model trained in "
+    "Predicted compressive strength is computed by the tuned XGBoost model from "
     "[notebook 02](https://github.com/KRFlowers/uhpc-concrete-strength-prediction/"
     "blob/main/notebooks/02_model_development.ipynb). "
-    "Adjust the sliders in the sidebar to define a mix design."
+    "Use the sidebar sliders to define a UHPC mix design. "
+)
+
+# Shrink the st.metric value font so the cards don't dominate the page
+st.markdown(
+    """
+    <style>
+      [data-testid="stMetricValue"] { font-size: 1.5rem; }
+      [data-testid="stMetricLabel"] { font-size: 0.9rem; }
+      [data-testid="stMetricDelta"] { font-size: 0.8rem; }
+      [data-testid="stPageLink"] p { font-size: 0.85rem; }
+    </style>
+    """,
+    unsafe_allow_html=True,
 )
 
 
 # --- Sidebar inputs ---
-# WHAT: Build one slider per feature in the sidebar
-# WHY: The loop reads from FEATURE_CONFIG so the sidebar is driven by data,
-#      not hardcoded — adding/removing a feature only requires editing the dict
+#  loop reads from FEATURE_CONFIG so the sidebar is dynamically generated 
 
 st.sidebar.header("Mix Design Inputs")
 st.sidebar.markdown("Adjust values to define a UHPC mix design.")
@@ -69,52 +70,46 @@ for feature in feature_names:
         value=default, step=step, help=help_text,
     )
 
-# WHAT: Add a reset button to the sidebar
-# WHY: st.rerun() clears all slider state back to defaults without
-#      the user having to manually reset each slider
+# Add a reset button to the sidebar
+
 if st.sidebar.button("Reset to Defaults"):
     st.rerun()
 
 
 # --- Prediction ---
-# WHAT: Convert slider values to a DataFrame and run model.predict()
-# WHY: The model expects a DataFrame with columns matching the training
-#      features — a dict wrapped in a list creates a single-row DataFrame
+# Convert slider values to a DataFrame and run model.predict()
 
 input_df = pd.DataFrame([input_values])
 prediction = model.predict(input_df)[0]
 
-# WHAT: Display three metric cards side by side
-# WHY: Gives the user a quick summary — prediction, UHPC classification,
-#      and model accuracy — without scrolling
+st.subheader("Strength Prediction")
+
+# Display three metric cards side by side
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    st.metric(
-        label="Predicted Compressive Strength",
-        value=f"{prediction:.1f} MPa",
-    )
+    with st.container(border=True, height=140):
+        st.metric(
+            label="Predicted Compressive Strength",
+            value=f"{prediction:.1f} MPa",
+        )
 
 with col2:
-    # WHAT: UHPC classification metric with correct color logic
-    # WHY: display_uhpc_metric always uses delta_color="normal" so the
-    #      sign of the delta determines the color (green = above, red = below)
-    display_uhpc_metric(prediction)
+    with st.container(border=True, height=140):
+        # UHPC classification metric with color logic
+        display_uhpc_metric(prediction)
 
 with col3:
-    # WHAT: Show the model's test-set accuracy as a static metric
-    # WHY: Gives the user confidence in the prediction — update these
-    #      values if the model is retrained with different results
-    st.metric(
-        label="Model Performance",
-        value="RMSE 5.93 MPa",
-        help="XGBoost (tuned via GridSearchCV) from notebook 02. "
-             "RMSE 5.93 MPa, R² = 0.978 on held-out test set.",
-    )
+    with st.container(border=True, height=140):
+        # Show the model's test-set accuracy as a static metric
+        st.metric(
+            label="Model Performance",
+            value="RMSE 5.93 MPa",
+            help="XGBoost (tuned via GridSearchCV) from notebook 02. "
+                 "RMSE 5.93 MPa, R² = 0.978 on held-out test set.",
+        )
 
-# WHAT: Cross-link to the Observation Explorer page
-# WHY: Right-aligned so it reads as secondary navigation — discoverable
-#      without competing with the primary metrics above
+# Cross-link to the Observation Explorer page
 _, link_col = st.columns([1.7, 1])
 with link_col:
     st.page_link(
@@ -127,34 +122,25 @@ st.divider()
 
 
 # --- Feature Importance (SHAP) ---
-# WHAT: Use SHAP TreeExplainer to calculate per-feature impact values
-# WHY: TreeExplainer is exact (not approximate) for tree-based models and
-#      shows how much each feature pushed the prediction above or below
-#      the model's average prediction (the base value)
+# Use SHAP TreeExplainer to calculate per-feature impact values
 
-st.subheader("Feature Impact on This Mix Design")
+st.subheader("Feature Impact (SHAP)")
 st.markdown(
-    "SHAP values below show how much each feature increases or decreases "
-    "the predicted strength."
+    "How much each feature pushes the prediction above or below the model's "
+    "average prediction on the training set."
 )
 
-# WHAT: Load the training data and create the SHAP explainer
-# WHY: TreeExplainer needs the training data as background to compute
-#      the base value (average prediction) that SHAP values are relative to
+# Load the training data and create the SHAP explainer
 X_train = load_training_data()
 explainer = shap.TreeExplainer(model, data=X_train)
 shap_values = explainer(input_df)
 
-# WHAT: Render the SHAP impact table sorted by absolute impact
-# WHY: display_shap_table handles formatting and sorting — the user sees
-#      which features had the biggest effect on this mix's predicted strength
+# Render the SHAP impact table sorted by absolute impact
 display_shap_table(shap_values.values[0], feature_names, input_values)
 
 
 # --- About (collapsed by default) ---
-# WHAT: Add a collapsible section with model and dataset details
-# WHY: Keeps the main page clean while making project context available
-#      for anyone who wants to understand how the model was built
+# Keep the main page clean while making project context available
 
 with st.expander("About This Tool"):
     st.markdown("""
@@ -185,9 +171,6 @@ for each prediction.
 
 
 # --- Footer ---
-# WHAT: Display a disclaimer caption at the bottom of the page
-# WHY: Reminds users this is for exploratory use — not a substitute
-#      for laboratory testing in structural applications
 
 st.divider()
 st.caption(
