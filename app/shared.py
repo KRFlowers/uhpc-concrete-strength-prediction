@@ -1,9 +1,7 @@
 """
-Shared configuration, model/data loaders, and display helpers
-for the UHPC Compressive Strength app.
+Shared configuration parameters for the UHPC Compressive Strength app including model/data loaders, and display helpers.
 
-Both pages (Strength Predictor and Observation Explorer) import from this
-module to avoid duplicating constants, loading logic, and display code.
+Used by Strength Predictor and Observation Explorer pages
 """
 
 # --- Imports ---
@@ -16,21 +14,18 @@ from pathlib import Path
 
 
 # --- Configuration ---
-#Define file paths relative to the project structure
-
-
-APP_DIR = Path(__file__).parent            # WHAT: Resolves to the app/ folder
-PROJECT_ROOT = APP_DIR.parent              # WHAT: Resolves to the project root folder
+#Define relative file paths
+APP_DIR = Path(__file__).parent            
+PROJECT_ROOT = APP_DIR.parent              folder
 RESULTS_DIR = PROJECT_ROOT / "data" / "results"
 
-# Path to the trained XGBoost model saved by notebook 02
-
+#XGBoost model saved by notebook 02
 MODEL_PATH = RESULTS_DIR / "xgb_tuned_model.joblib"
 
-# Set FHWA-defined minimum compressive strength for UHPC classification
+# Set UHPC classification used in analysis
 UHPC_THRESHOLD = 150  # MPa
 
-#  Define feature metadata used to build sidebar sliders dynamically
+#  Define feature metadata - used to build sidebar sliders dynamically
 FEATURE_CONFIG = {
     "cement":           ("Cement",              "kg/m³", 200.0, 1300.0, 770.0, 10.0, "Primary binder (present in all mixes)"),
     "slag":             ("Slag",                "kg/m³",   0.0,  400.0,   0.0, 10.0, "Supplementary cite material (optional)"),
@@ -49,7 +44,6 @@ FEATURE_CONFIG = {
 
 
 # --- Load model and data ---
-
 @st.cache_resource
 def load_model():
     """Load the trained XGBoost model and feature names from the saved joblib file."""
@@ -85,7 +79,6 @@ def load_all_observations():
 
 
 # --- Display helpers ---
-
 def display_uhpc_metric(strength, label="UHPC Classification"):
     """Render a st.metric card for UHPC classification with correct color logic.
 

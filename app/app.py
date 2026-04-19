@@ -1,23 +1,20 @@
 """
-UHPC Compressive Strength App — Entry Point
+UHPC Compressive Strength App — Main Entry Point
 
-Defines the multi-page navigation using st.navigation / st.Page.
-Run with: streamlit run app/app.py
+Configures multi-page navigation via st.navigation and st.Page.
 """
 
 import streamlit as st
 
 # --- Page config ---
-# Set the browser tab title, icon, and page layout
-
+# Set the browser tab 
 st.set_page_config(
     page_title="UHPC Strength Predictor",
     layout="centered",
 )
 
 # --- Navigation ---
-# Define the two pages and let Streamlit handle routing
-
+# Define pages 
 pages = [
     st.Page(
         "pages/strength_predictor.py",

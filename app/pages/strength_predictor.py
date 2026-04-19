@@ -1,12 +1,11 @@
 """
 Strength Predictor Page
 
-Lets users define a UHPC mix design via sidebar sliders and predicts
+UHPC mix design tool using sidebar sliders. Predicts
 compressive strength using the trained XGBoost model. SHAP values
 explain which features drive the prediction.
 """
 # Load external libraries and shared app utilities
-
 import streamlit as st
 import pandas as pd
 import shap
@@ -21,7 +20,6 @@ from shared import (
 
 
 # --- Load model ---
-
 try:
     model, feature_names = load_model()
 except FileNotFoundError:
@@ -32,7 +30,6 @@ except FileNotFoundError:
 
 
 # --- Header ---
-
 st.header("UHPC Compressive Strength Predictor")
 st.markdown(
     "Predicted compressive strength is computed by the tuned XGBoost model from "
@@ -56,8 +53,7 @@ st.markdown(
 
 
 # --- Sidebar inputs ---
-#  loop reads from FEATURE_CONFIG so the sidebar is dynamically generated 
-
+#  loop reads from FEATURE_CONFIG, allows dynamic configuration of features
 st.sidebar.header("Mix Design Inputs")
 st.sidebar.markdown("Adjust values to define a UHPC mix design.")
 
@@ -71,14 +67,12 @@ for feature in feature_names:
     )
 
 # Add a reset button to the sidebar
-
 if st.sidebar.button("Reset to Defaults"):
     st.rerun()
 
 
 # --- Prediction ---
 # Convert slider values to a DataFrame and run model.predict()
-
 input_df = pd.DataFrame([input_values])
 prediction = model.predict(input_df)[0]
 
@@ -123,7 +117,6 @@ st.divider()
 
 # --- Feature Importance (SHAP) ---
 # Use SHAP TreeExplainer to calculate per-feature impact values
-
 st.subheader("Feature Impact (SHAP)")
 st.markdown(
     "How much each feature pushes the prediction above or below the model's "
@@ -140,8 +133,6 @@ display_shap_table(shap_values.values[0], feature_names, input_values)
 
 
 # --- About (collapsed by default) ---
-# Keep the main page clean while making project context available
-
 with st.expander("About This Tool"):
     st.markdown("""
 This app is part of the [UHPC Compressive Strength Prediction](https://github.com/KRFlowers/uhpc-concrete-strength-prediction) project.
@@ -171,7 +162,6 @@ for each prediction.
 
 
 # --- Footer ---
-
 st.divider()
 st.caption(
     "UHPC Compressive Strength Predictor | "

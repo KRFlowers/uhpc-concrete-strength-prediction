@@ -1,14 +1,11 @@
 """
 Observation Explorer Page
 
-Lets users browse the full dataset (train + test), filter observations,
-select a row, and see the model's prediction and SHAP explanation for
-that specific mix design.
+Enables browsing of the full dataset (train + test), filtering observations,
+selecting observations, and reviewing the model's prediction and SHAP explanation
 """
 
 # --- Imports ---
-# Load external libraries and shared app utilities
-
 import streamlit as st
 import pandas as pd
 import shap
@@ -24,8 +21,6 @@ from shared import (
 
 
 # --- Load model and data ---
-#  Load the trained XGBoost model and all 792 observations from disk
-
 try:
     model, feature_names = load_model()
 except FileNotFoundError:
@@ -38,8 +33,6 @@ all_obs = load_all_observations()
 
 
 # --- Header ---
-# Display the page title and introductory description
-
 st.title("Observation Explorer")
 st.markdown(
     "Browse the dataset of 792 UHPC mix designs. Select a row to see "
@@ -48,17 +41,14 @@ st.markdown(
 
 
 # --- Metric card placeholder ---
-#  Reserve space for metric cards at the top of the page
-
 metrics_container = st.container()
 
 # --- Sidebar filters ---
-# Sidebar filters to narrow the observation table to help users find specific
-# strength ranges or material combinations quickly
+# Sidebar filters to narrow the observation table 
 
 st.sidebar.header("Filters")
 
-# Strength range slider to users isolate mixes within a specific performance range
+# Strength range slider to users isolate mixes within a specific range
 strength_min = float(all_obs["compressive_strength"].min())
 strength_max = float(all_obs["compressive_strength"].max())
 strength_range = st.sidebar.slider(
@@ -78,8 +68,7 @@ set_filter = st.sidebar.radio(
     help="Show observations from training set, test set, or both",
 )
 
-# Add checkboxes for filtering by whether a material is present lets users
-# find mixes that include specific supplementary materials
+# Add checkboxes for filtering by material 
 st.sidebar.markdown("**Filter by material presence:**")
 material_filters = {}
 optional_materials = [
@@ -101,19 +90,19 @@ for mat in optional_materials:
 
 filtered = all_obs.copy()
 
-# Keep only observations within the selected strength range
+# Filter observations within the selected strength range
 filtered = filtered[filtered["compressive_strength"].between(*strength_range)]
 
-#  Keep only observations from the selected dataset split
+#  Filter observations from the selected dataset split
 if set_filter != "All":
     filtered = filtered[filtered["Set"] == set_filter]
 
-# Keep only observations where checked materials are present (> 0)
+# Filter observations where checked materials are present (> 0)
 for mat, required in material_filters.items():
     if required:
         filtered = filtered[filtered[mat] > 0]
 
-# Show a count of how many observations pass all filters
+# Show observation pass count
 st.markdown(f"**{len(filtered)}** observations match the current filters.")
 
 
@@ -130,7 +119,7 @@ display_df.insert(0, "Strength (MPa)", strength_col)
 
 
 # --- Selectable dataframe ---
-# Render the table with single-row selection enabled
+# Rendertable with single-row selection enabled
 
 event = st.dataframe(
     display_df,
@@ -143,15 +132,14 @@ event = st.dataframe(
 
 
 # --- Resolve selection and fill metric cards ---
-# Check if a row is selected, compute values, then fill the
-# placeholder container that was reserved at the top of the page
+# Check if a row is selected, compute values,  fill placeholder
 
-# Check which row (if any) the user clicked in the table
+# Check selected row 
 selected_rows = event.selection.rows
 has_selection = bool(selected_rows)
 
 if has_selection:
-    # Extract the selected observation and run the model on its features
+    # Extract observation and run the model on features
     selected = filtered.iloc[selected_rows[0]]
     feature_vals = {f: selected[f] for f in feature_names}
     actual_strength = selected["compressive_strength"]
@@ -171,23 +159,23 @@ with metrics_container:
         )
 
     with col2:
-        # Show what the model would predict for this observation's features
+        # Show model prediction for feature set
         st.metric(
             label="Predicted Strength",
             value=f"{predicted_strength:.1f} MPa" if has_selection else "—",
         )
 
     with col3:
-        # Show the difference between actual and predicted strength
+        # Show difference between actual and predicted strength
 
         st.metric(
             label="Residual",
             value=f"{residual:+.1f} MPa" if has_selection else "—",
-            help="Actual minus Predicted. Positive means the model under-predicted.",
+            help="Actual minus Predicted. Positive meansthe model under-predicted.",
         )
 
     with col4:
-        # Classify the observation as meeting or missing the UHPC threshold
+        # Classify observation against UHPC threshold
         if has_selection:
             display_uhpc_metric(actual_strength)
         else:
@@ -199,8 +187,7 @@ with metrics_container:
 
 
 # --- SHAP explanation (only when a row is selected) ---
-# Compute and display per-feature SHAP values for the selected observation
-
+# Compute and display SHAP values for the selected observation
 if has_selection:
     st.divider()
 
@@ -220,8 +207,7 @@ if has_selection:
 
 
 # --- Footer ---
-# Display a disclaimer caption at the bottom of the page
-
+# Display disclaimer caption 
 st.divider()
 st.caption(
     "UHPC Compressive Strength Predictor | "
