@@ -1,9 +1,8 @@
 """
 Strength Predictor Page
 
-UHPC mix design tool using sidebar sliders. Predicts
-compressive strength using the trained XGBoost model. SHAP values
-explain which features drive the prediction.
+UHPC mix design tool. Inputs live in a left column; predictions,
+classification, and SHAP explanations render on the right.
 """
 # Load external libraries and shared app utilities
 import streamlit as st
@@ -19,122 +18,105 @@ from shared import (
 )
 
 
-# --- Load model ---
-try:
-    model, feature_names = load_model()
-except FileNotFoundError:
-    st.error(
-        "Model file not found. Run notebook 02 to generate the model artifacts."
-    )
-    st.stop()
+def render():
+    # --- Load model ---
+    try:
+        model, feature_names = load_model()
+    except FileNotFoundError:
+        st.error(
+            "Model file not found. Run notebook 02 to generate the model artifacts."
+        )
+        st.stop()
 
-
-# --- Header ---
-st.header("UHPC Compressive Strength Predictor")
-st.markdown(
-    "Predicted compressive strength is computed by the tuned XGBoost model from "
-    "[notebook 02](https://github.com/KRFlowers/uhpc-concrete-strength-prediction/"
-    "blob/main/notebooks/02_model_development.ipynb). "
-    "Use the sidebar sliders to define a UHPC mix design. "
-)
-
-# Shrink the st.metric value font so the cards don't dominate the page
-st.markdown(
-    """
-    <style>
-      [data-testid="stMetricValue"] { font-size: 1.5rem; }
-      [data-testid="stMetricLabel"] { font-size: 0.9rem; }
-      [data-testid="stMetricDelta"] { font-size: 0.8rem; }
-      [data-testid="stPageLink"] p { font-size: 0.85rem; }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
-
-
-# --- Sidebar inputs ---
-#  loop reads from FEATURE_CONFIG, allows dynamic configuration of features
-st.sidebar.header("Mix Design Inputs")
-st.sidebar.markdown("Adjust values to define a UHPC mix design.")
-
-input_values = {}
-for feature in feature_names:
-    label, unit, min_val, max_val, default, step, help_text = FEATURE_CONFIG[feature]
-    input_values[feature] = st.sidebar.slider(
-        f"{label} ({unit})",
-        min_value=min_val, max_value=max_val,
-        value=default, step=step, help=help_text,
+    # --- Intro ---
+    st.markdown(
+        "Define inputs to review the predicted compressive strength "
+        "Predictions come from the tuned "
+        "XGBoost model developed in [notebook 02]"
+        "(https://github.com/KRFlowers/uhpc-concrete-strength-prediction/"
+        "blob/main/notebooks/02_model_development.ipynb) "
+        "of the accompanying analysis."
     )
 
-# Add a reset button to the sidebar
-if st.sidebar.button("Reset to Defaults"):
-    st.rerun()
+    # Shrink the st.metric value font so the cards don't dominate the page
+    st.markdown(
+        """
+        <style>
+          [data-testid="stMetricValue"] { font-size: 1.5rem; }
+          [data-testid="stMetricLabel"] { font-size: 0.9rem; }
+          [data-testid="stMetricDelta"] { font-size: 0.8rem; }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
 
+    # --- Two-column layout: inputs (left) | content (right) ---
+    inputs_col, content_col = st.columns([1, 3], gap="large")
 
-# --- Prediction ---
-# Convert slider values to a DataFrame and run model.predict()
-input_df = pd.DataFrame([input_values])
-prediction = model.predict(input_df)[0]
+    with inputs_col:
+        with st.container(border=True):
+            st.subheader("Mix Design Inputs")
+            st.caption("Adjust values to define a UHPC mix design.")
 
-st.subheader("Strength Prediction")
+            input_values = {}
+            for feature in feature_names:
+                label, unit, min_val, max_val, default, step, help_text = FEATURE_CONFIG[feature]
+                input_values[feature] = st.slider(
+                    f"{label} ({unit})",
+                    min_value=min_val, max_value=max_val,
+                    value=default, step=step, help=help_text,
+                )
 
-# Display three metric cards side by side
-col1, col2, col3 = st.columns(3)
+            if st.button("Reset to Defaults"):
+                st.rerun()
 
-with col1:
-    with st.container(border=True, height=140):
-        st.metric(
-            label="Predicted Compressive Strength",
-            value=f"{prediction:.1f} MPa",
+    with content_col:
+        # --- Prediction ---
+        input_df = pd.DataFrame([input_values])
+        prediction = model.predict(input_df)[0]
+
+        st.subheader("Strength Prediction")
+
+        col1, col2, col3 = st.columns(3)
+
+        with col1:
+            with st.container(border=True, height=140):
+                st.metric(
+                    label="Predicted Strength",
+                    value=f"{prediction:.1f} MPa",
+                )
+
+        with col2:
+            with st.container(border=True, height=140):
+                display_uhpc_metric(prediction)
+
+        with col3:
+            with st.container(border=True, height=140):
+                st.metric(
+                    label="CO₂ Emissions (Baseline)",
+                    value="—",
+                    help="Baseline CO₂ estimate (pending). Will be computed "
+                         "from published material-level emission factors.",
+                )
+
+        st.divider()
+
+        # --- Feature Importance (SHAP) ---
+        st.subheader("Feature Impact (SHAP)")
+        st.markdown(
+            "How much each feature pushes the prediction above or below the model's "
+            "average prediction on the training set."
         )
 
-with col2:
-    with st.container(border=True, height=140):
-        # UHPC classification metric with color logic
-        display_uhpc_metric(prediction)
+        X_train = load_training_data()
+        explainer = shap.TreeExplainer(model, data=X_train)
+        shap_values = explainer(input_df)
 
-with col3:
-    with st.container(border=True, height=140):
-        # Show the model's test-set accuracy as a static metric
-        st.metric(
-            label="Model Performance",
-            value="RMSE 5.93 MPa",
-            help="XGBoost (tuned via GridSearchCV) from notebook 02. "
-                 "RMSE 5.93 MPa, R² = 0.978 on held-out test set.",
-        )
+        display_shap_table(shap_values.values[0], feature_names, input_values)
 
-# Cross-link to the Observation Explorer page
-_, link_col = st.columns([1.7, 1])
-with link_col:
-    st.page_link(
-        "pages/observation_explorer.py",
-        label="Explore individual observations",
-        icon=":material/search:",
-    )
-
-st.divider()
-
-
-# --- Feature Importance (SHAP) ---
-# Use SHAP TreeExplainer to calculate per-feature impact values
-st.subheader("Feature Impact (SHAP)")
-st.markdown(
-    "How much each feature pushes the prediction above or below the model's "
-    "average prediction on the training set."
-)
-
-# Load the training data and create the SHAP explainer
-X_train = load_training_data()
-explainer = shap.TreeExplainer(model, data=X_train)
-shap_values = explainer(input_df)
-
-# Render the SHAP impact table sorted by absolute impact
-display_shap_table(shap_values.values[0], feature_names, input_values)
-
-
-# --- About (collapsed by default) ---
-with st.expander("About This Tool"):
-    st.markdown("""
+        # --- About (collapsed by default) ---
+        with st.expander("About This Tool"):
+            st.markdown("""
 This app is part of the [UHPC Compressive Strength Prediction](https://github.com/KRFlowers/uhpc-concrete-strength-prediction) project.
 It loads the trained model directly from the project's saved artifacts — predictions
 reflect the exact model built in the analysis notebooks.
@@ -158,13 +140,16 @@ for each prediction.
   replace laboratory testing for structural applications
 - The model has not been validated on external datasets
 - Input values outside the training data range may produce unreliable predictions
-    """)
+            """)
 
-
-# --- Footer ---
-st.divider()
-st.caption(
-    "UHPC Compressive Strength Predictor | "
-    "Built on the XGBoost model from notebook 02 | "
-    "For exploratory use only"
-)
+    # --- Footer ---
+    st.divider()
+    st.caption(
+        "UHPC Strength Prediction Tool · Prototype · "
+        "Companion to the "
+        "[UHPC Concrete Strength Prediction analysis]"
+        "(https://github.com/KRFlowers/uhpc-concrete-strength-prediction) · "
+        "Model developed in [notebook 02]"
+        "(https://github.com/KRFlowers/uhpc-concrete-strength-prediction/"
+        "blob/main/notebooks/02_model_development.ipynb)"
+    )

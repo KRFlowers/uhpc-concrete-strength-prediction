@@ -16,7 +16,7 @@ from pathlib import Path
 # --- Configuration ---
 #Define relative file paths
 APP_DIR = Path(__file__).parent            
-PROJECT_ROOT = APP_DIR.parent              folder
+PROJECT_ROOT = APP_DIR.parent              
 RESULTS_DIR = PROJECT_ROOT / "data" / "results"
 
 #XGBoost model saved by notebook 02
@@ -89,7 +89,7 @@ def display_uhpc_metric(strength, label="UHPC Classification"):
     st.metric(
         label=label,
         value="Meets UHPC" if strength >= UHPC_THRESHOLD else "Below UHPC",
-        delta=f"{strength - UHPC_THRESHOLD:+.1f} MPa from threshold",
+        delta=f"{strength - UHPC_THRESHOLD:+.1f} MPa vs {UHPC_THRESHOLD} MPa threshold",
         delta_color="normal",
     )
 

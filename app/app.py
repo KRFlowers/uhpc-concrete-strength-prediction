@@ -29,6 +29,7 @@ st.html(
 
 # --- Header ---
 st.title("UHPC Strength Prediction Tool")
+
 st.caption(
     "Interactive interface for the "
     "[UHPC Concrete Strength Prediction analysis]"
@@ -39,7 +40,7 @@ st.caption(
 
 # --- Tabs ---
 explorer_tab, predictor_tab = st.tabs([
-    "Observation Explorer",
+    "Dataset Explorer",
     "Strength Predictor",
 ])
 
