@@ -120,4 +120,5 @@ def display_shap_table(shap_values_array, feature_names, feature_values):
         ),
         use_container_width=True,
         hide_index=True,
+        height=320,
     )

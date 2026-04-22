@@ -16,6 +16,7 @@ from shared import (
     display_uhpc_metric,
     display_shap_table,
 )
+from emission_factors import compute_co2
 
 
 def render():
@@ -75,29 +76,78 @@ def render():
         input_df = pd.DataFrame([input_values])
         prediction = model.predict(input_df)[0]
 
+        # --- CO2 estimate for the current mix ---
+        # Read fiber type from session state so the card reflects the toggle
+        # that lives in the breakdown expander below.
+        fiber_type = st.session_state.get("co2_fiber_type_predictor", "virgin")
+        co2_result = compute_co2(input_values, fiber_type=fiber_type)
+
         st.subheader("Strength Prediction")
 
         col1, col2, col3 = st.columns(3)
 
         with col1:
-            with st.container(border=True, height=140):
+            with st.container(border=True, height=110):
                 st.metric(
                     label="Predicted Strength",
                     value=f"{prediction:.1f} MPa",
                 )
 
         with col2:
-            with st.container(border=True, height=140):
+            with st.container(border=True, height=110):
                 display_uhpc_metric(prediction)
 
         with col3:
-            with st.container(border=True, height=140):
+            with st.container(border=True, height=110):
                 st.metric(
                     label="CO₂ Emissions (Baseline)",
-                    value="—",
-                    help="Baseline CO₂ estimate (pending). Will be computed "
-                         "from published material-level emission factors.",
+                    value=f"{co2_result['totals']['default']:.0f} kg/m³",
+                    help="Cradle-to-gate (A1–A3) estimate. Expand the "
+                         "breakdown below for range and top contributors.",
                 )
+
+        # --- CO₂ breakdown ---
+        with st.expander("CO₂ breakdown"):
+            st.radio(
+                "Steel fiber source",
+                options=["virgin", "recycled"],
+                key="co2_fiber_type_predictor",
+                horizontal=True,
+                help="Virgin = blast furnace / BOF route. "
+                     "Recycled = electric-arc-furnace (EAF) from scrap.",
+            )
+
+            totals = co2_result["totals"]
+            by_ingredient = co2_result["by_ingredient"]
+
+            c1, c2, c3 = st.columns(3)
+            c1.metric("Low",     f"{totals['low']:.0f} kg CO₂/m³")
+            c2.metric("Default", f"{totals['default']:.0f} kg CO₂/m³")
+            c3.metric("High",    f"{totals['high']:.0f} kg CO₂/m³")
+
+            if by_ingredient:
+                total_default = totals["default"] or 1.0
+                contributors = sorted(
+                    by_ingredient.items(),
+                    key=lambda kv: kv[1][1],
+                    reverse=True,
+                )[:3]
+                pieces = [
+                    f"{FEATURE_CONFIG[name][0]}: {vals[1]:.0f} kg "
+                    f"({100 * vals[1] / total_default:.0f}%)"
+                    for name, vals in contributors
+                ]
+                st.caption(
+                    "**Top contributors (default):** " + " · ".join(pieces)
+                )
+
+            st.caption(
+                "Scope: cradle-to-gate (A1–A3). Sources compiled from "
+                "peer-reviewed LCA literature (Sameer et al. 2019; "
+                "Randl et al. 2014; Habert et al. 2020; and others). "
+                "Not suitable for procurement, EPD reporting, or "
+                "regulatory use."
+            )
 
         st.divider()
 
