@@ -85,7 +85,7 @@ Run locally:
 - Moderate dataset size (792 records after cleaning) with no external validation dataset
 - Bootstrap prediction intervals achieved 81.8% coverage vs. the 95% nominal target, suggesting the need for an alternative uncertainty method
 - Analysis used raw mix design features only; feature engineering was not explored
-- CO₂ numbers are rough estimates based on published cradle-to-gate (A1–A3) emission factors. They are meant for visual comparison between mixes, not procurement-grade accounting. Using these values in a real decision would require regional factors and review by someone with materials-science expertise
+- CO₂ numbers are rough estimates based on published cradle-to-gate (A1–A3) emission factors. They are meant for visual comparison between mixes, not procurement-grade accounting. Using these values in a real decision would require regional factors and review by someone with materials-science expertise. Full factor sources and caveats are documented in [`docs/emission_factors_v2.md`](docs/emission_factors_v2.md)
 
 ---
 

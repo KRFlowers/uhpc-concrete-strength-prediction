@@ -2,7 +2,7 @@
 Cradle-to-gate (A1-A3) CO2 emission factors for UHPC mix ingredients.
 
 Values are compiled from peer-reviewed LCA literature. See
-notes/emission_factors_v2.md for full citations and methodological caveats.
+docs/emission_factors_v2.md for full citations and methodological caveats.
 
 Keys in EMISSION_FACTORS match the feature names in shared.FEATURE_CONFIG so
 the widget can accept the same mix dict that is passed to the XGBoost model.
