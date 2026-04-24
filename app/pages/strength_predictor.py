@@ -163,6 +163,11 @@ def render():
         shap_values = explainer(input_df)
 
         display_shap_table(shap_values.values[0], feature_names, input_values)
+        st.caption(
+            "SHAP values computed live via the same `TreeExplainer` approach as "
+            "[notebook 03](https://github.com/KRFlowers/uhpc-concrete-strength-prediction/"
+            "blob/main/notebooks/03_model_interpretation.ipynb)."
+        )
 
         # --- About (collapsed by default) ---
         with st.expander("About This Tool"):

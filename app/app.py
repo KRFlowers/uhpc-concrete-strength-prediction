@@ -48,14 +48,7 @@ st.sidebar.markdown(
 )
 
 st.sidebar.markdown(
-    "**Strength Predictor** allows designing custom mixes  to review the same three outputs."
-)
-st.sidebar.markdown(
-    "Both tabs use the tuned XGBoost model to generate predictions "
-    "([notebook 02]"
-    "(https://github.com/KRFlowers/uhpc-concrete-strength-prediction/"
-    "blob/main/notebooks/02_model_development.ipynb), "
-    "RMSE 5.93 MPa on held-out test data)."
+    "**Strength Predictor** allows designing custom mixes to review the same three outputs."
 )
 
 st.sidebar.markdown("### Limitations")
@@ -64,18 +57,27 @@ st.sidebar.markdown(
     "against domain expertise and materials science literature."
 )
 
-st.sidebar.markdown("### CO₂ Emissions (Methodology & Assumptions)")
+#st.sidebar.markdown("### CO₂ Emissions (Methodology & Assumptions)")
 st.sidebar.markdown(
     "CO₂ estimates use emission factors compiled from peer-reviewed literature. "
-    "Ranges reflect variability across studies andare for exploratory use only."
-)
-st.sidebar.markdown(
+    "Ranges reflect variability across studies and are for exploratory use only. "
     "Sources: [docs/emission_factors_v2.md]"
     "(https://github.com/KRFlowers/uhpc-concrete-strength-prediction/"
     "blob/main/docs/emission_factors_v2.md)"
 )
 
 st.sidebar.markdown("### Data & Code")
+st.sidebar.markdown(
+    "The app loads artifacts from the original analysis: the tuned XGBoost model "
+    "([notebook 02]"
+    "(https://github.com/KRFlowers/uhpc-concrete-strength-prediction/"
+    "blob/main/notebooks/02_model_development.ipynb), "
+    "RMSE 5.93 MPa on held-out test data) and the SHAP TreeExplainer from "
+    "[notebook 03]"
+    "(https://github.com/KRFlowers/uhpc-concrete-strength-prediction/"
+    "blob/main/notebooks/03_model_interpretation.ipynb), "
+    "enabling prediction reproducibility."
+)
 st.sidebar.markdown(
     "[GitHub repository]"
     "(https://github.com/KRFlowers/uhpc-concrete-strength-prediction)"

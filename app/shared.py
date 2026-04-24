@@ -61,6 +61,11 @@ def load_training_data():
 def load_all_observations():
     """Load all 792 observations (train + test) with actual strengths and set labels.
 
+    Reconstructs the full dataset from the saved X_train/X_test/y_train/y_test
+    splits rather than loading the pre-split cleaned CSV. This guarantees the
+    app sees the exact same feature columns, ordering, and transformations the
+    model was trained on, and preserves the train/test label for display.
+
     Returns a single DataFrame with 13 feature columns, compressive_strength,
     and a Set column ('Train' or 'Test').
     """
