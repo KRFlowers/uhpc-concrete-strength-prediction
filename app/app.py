@@ -40,16 +40,18 @@ st.html(
 # Sidebar: about, limitations, CO2 methodology, repo link
 st.sidebar.markdown("### About this Tool")
 st.sidebar.markdown(
-    "This tool adds interactive access to the ***UHPC Concrete Strength "
-    "Prediction analysis***."
+    "This tool is part of the **UHPC Concrete Strength Prediction** project that enables interactive access to its features."
 )
 st.sidebar.markdown(
-    "It allows **browsing the 792 training mixes** to see predicted "
-    "compressive strength, SHAP-based feature impact, and a cradle-to-gate CO₂ "
-    "estimate. It also allows **designing a custom mix** to review the same outputs."
+    "**Dataset Explorer** allows browsing the 792 training mixes to see predicted "
+    "compressive strength, SHAP feature impact, and cradle-to-gate CO₂ emissions."
+)
+
+st.sidebar.markdown(
+    "**Strength Predictor** allows designing custom mixes  to review the same three outputs."
 )
 st.sidebar.markdown(
-    "It uses the tuned XGBoost model from the analysis "
+    "Both tabs use the tuned XGBoost model to generate predictions "
     "([notebook 02]"
     "(https://github.com/KRFlowers/uhpc-concrete-strength-prediction/"
     "blob/main/notebooks/02_model_development.ipynb), "
@@ -65,8 +67,7 @@ st.sidebar.markdown(
 st.sidebar.markdown("### CO₂ Emissions (Methodology & Assumptions)")
 st.sidebar.markdown(
     "CO₂ estimates use emission factors compiled from peer-reviewed literature. "
-    "Ranges reflect variability across studies. Values are for exploratory use "
-    "only, not for formal assessment, reporting, or decision-making."
+    "Ranges reflect variability across studies andare for exploratory use only."
 )
 st.sidebar.markdown(
     "Sources: [docs/emission_factors_v2.md]"
@@ -80,26 +81,10 @@ st.sidebar.markdown(
     "(https://github.com/KRFlowers/uhpc-concrete-strength-prediction)"
 )
 
-# Hide  Streamlit sidebar entirely; all inputs live in-tab.
-#st.html(
-#    """
- #   <style>
-#      section[data-testid="stSidebar"] { display: none; }
-#      button[data-testid="stSidebarCollapsedControl"] { display: none; }
-#    </style>
-#    """
-#)
 
 # Render shared header and caption.
 st.title("UHPC Strength Prediction Tool")
 
-#st.markdown(
- #   "Interactive interface for the "
-  #  "[UHPC Concrete Strength Prediction analysis]"
-  #  "(https://github.com/KRFlowers/uhpc-concrete-strength-prediction). "
-  #  "Allows browsing the initial 792 mix designs for strength and feature importance, "
-  #  "as well as defining custom concrete mixes and reviewing predicted strength."
-# ) 
 
 # Render top tabs and call each page's render() function within its tab.
 explorer_tab, predictor_tab = st.tabs([

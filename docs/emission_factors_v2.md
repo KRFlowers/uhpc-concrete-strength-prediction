@@ -2,11 +2,7 @@
 
 Cradle-to-gate (A1–A3) emission factors in **kg CO2e per kg material**, compiled from peer-reviewed open-access literature for use in a concrete carbon emissions prediction tool.
 
-**Changes from v1:**
-- Aggregate defaults (coarse and fine) lowered to reflect UHPC-specific LCA sources (Sameer 2019, Randl 2014, Purnell & Black 2012). v1 defaults were on the high end and included an implicit long-haul transport allowance.
-- Steel fiber defaults revised: virgin fiber default lowered to match Bekaert Dramix EPD and worldsteel LCI; recycled fiber default raised slightly to include drawing/cutting energy (per Colombo 2022 review).
-- Weak citations replaced: Wang 2023 removed in favor of Sameer et al. 2019 (UHPC-specific, open-access). worldsteel methodology report replaced with worldsteel 2023 LCI dataset + Bekaert EPD.
-- Added authoritative cement/SCM references (Habert 2020, Miller 2021, Scrivener 2018, Purnell & Black 2012).
+> **Note:** This document was compiled with AI assistance from published LCA literature. It was developed to support the prototype CO₂ emissions calculator. The citations are real and values follow documented ranges, but the metrics are for demonstration and experimentation only — not intended for production use.
 
 ---
 
