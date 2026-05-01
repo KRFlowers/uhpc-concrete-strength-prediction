@@ -2,11 +2,11 @@
 
 ## Project Overview
 
-Ultra-High-Performance Concrete (UHPC) is an emerging technology designed for high-strength structural applications. Developing optimal mix proportions typically requires extensive laboratory testing, which is both time-consuming and costly (Kashem et al., 2023). This project tests whether machine learning can guide mix design by predicting compressive strength from material inputs, narrowing the search before lab testing begins.
+Ultra-High-Performance Concrete (UHPC) is a class of concrete engineered for high-strength structural applications. Developing optimal mix proportions typically requires extensive laboratory testing, which is both time-consuming and costly (Kashem et al., 2023). This project uses machine learning to predict compressive strength from material inputs, with the goal of prioritizing candidate mixes before lab testing.
 
-Concrete production is also a large source of global CO₂ emissions, and the materials chosen during mix design affect the embodied carbon of the finished structure. As a prototype, this project adds a cradle-to-gate CO₂ estimate alongside the strength prediction so both numbers can be seen at once. (NOTE: The emissions calculation is a rough estimate using published life-cycle factors, not a formal assessment).
+Five regression models were evaluated, including Linear Regression, Random Forest, and XGBoost. After cross-validation and hyperparameter tuning, XGBoost performed best, achieving an RMSE of 5.93 MPa (R² = 0.978). SHAP was used to interpret the model and identify which materials drove predicted strength.
 
-Five regression models were evaluated, including Linear Regression, Random Forest, and XGBoost. After cross-validation and hyperparameter tuning, XGBoost proved to be the strongest performer, achieving an RMSE of 5.93 MPa (R² = 0.978). A SHAP analysis was also used to interpret model predictions, showing how individual materials influence predicted strength. 
+Concrete production is also carbon-intensive, and the materials chosen during mix design affect not just compressive strength but also the embodied carbon of the finished structure. As a companion to the analysis, a Streamlit app was created to explore predicted compressive strength for different material combinations alongside their cradle-to-gate CO₂ estimates. The emissions calculation is a demonstration only. Emission factors were compiled from published life-cycle literature, not a formal assessment.
 
 **Companion tool.** An interactive Streamlit app is included with the analysis. It has two views: a **Dataset Explorer** for browsing the 792 training observations with per-row SHAP breakdowns, and a **Strength Predictor** for defining a custom mix and reviewing the model's prediction and feature impacts. See [Streamlit App](#streamlit-app) below. Both tabs also show estimated CO₂ emissions for review.
 
@@ -71,8 +71,8 @@ Top predictors identified via SHAP:
 
 ![Strength Predictor](images/app_strength_predictor.png)
 
-- **Dataset Explorer** — Browse all 792 training observations, filter by strength range, dataset split, or required materials, and select any row to see measured strength, model prediction, UHPC classification, and a SHAP breakdown
-- **Strength Predictor** — Define a custom mix via sliders to review predicted compressive strength, UHPC classification, and per-feature SHAP explanation
+- **Dataset Explorer** — Browse all 792 training observations, filter by strength range, dataset split, or required materials, and select any row to see measured strength, model prediction, UHPC classification, a SHAP breakdown and estimated cradle-to-gate CO₂ emissions.
+- **Strength Predictor** — Define a custom mix via sliders to review predicted compressive strength, UHPC classification, per-feature SHAP explanation and estimated cradle-to-gate CO₂ emissions.
 
 Run locally:
 
