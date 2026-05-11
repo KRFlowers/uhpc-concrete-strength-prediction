@@ -74,6 +74,10 @@ Top predictors identified via SHAP:
 - **Dataset Explorer** — Browse all 792 training observations, filter by strength range, dataset split, or required materials, and select any row to see measured strength, model prediction, UHPC classification, a SHAP breakdown and estimated cradle-to-gate CO₂ emissions.
 - **Strength Predictor** — Define a custom mix via sliders to review predicted compressive strength, UHPC classification, per-feature SHAP explanation and estimated cradle-to-gate CO₂ emissions.
 
+*[`test_with_predictions_with_emissions.xlsx`](data/results/test_with_predictions_with_emissions.xlsx) — separate Excel spreadsheet validating the app's CO₂ outputs.*
+
+
+
 Run locally:
 
     streamlit run app/app.py
